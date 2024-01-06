@@ -6,6 +6,7 @@ import { AppState } from "../../store";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 import CardContainer from "../UI/CardContainer";
+import { AVATARS } from "../../utils/avatars";
 
 const tabs = ["login", "signup"];
 
@@ -14,8 +15,8 @@ function AuthForm() {
   const { loading } = useSelector((state: AppState) => state.auth);
   const [activeTab, setActiveTab] = useState("");
 
-  const randomAvatarLink = `https://avatars.dicebear.com/api/avataaars/${new Date().toISOString()}.svg`;
-  const [avatar, setAvatar] = useState(randomAvatarLink);
+  const randomAvatarLink = AVATARS[Math.floor(Math.random() * AVATARS.length)];
+  // const randomAvatarLink = `https://avatars.dicebear.com/api/avataaars/${new Date().toISOString()}.svg`;
 
   useEffect(() => {
     const tab = router.query.tab;
@@ -25,7 +26,6 @@ function AuthForm() {
 
   const handleTabChange = (newActiveTab: string) => {
     if (!loading) {
-      setAvatar(randomAvatarLink);
       const newTab = tabs.includes(newActiveTab) ? newActiveTab : "login";
       router.replace(`${router.pathname}?tab=${newTab}`);
     }
@@ -34,7 +34,7 @@ function AuthForm() {
   return (
     <CardContainer>
       <img
-        src={avatar}
+        src={randomAvatarLink}
         alt="avatar"
         className="w-20 sm:w-24 h-20 sm:h-24 rounded-full mb-10 self-center"
       />
@@ -58,7 +58,11 @@ function AuthForm() {
         </a>
       </div>
 
-      {activeTab === "login" ? <LoginForm /> : <SignupForm avatar={avatar} />}
+      {activeTab === "login" ? (
+        <LoginForm />
+      ) : (
+        <SignupForm avatar={randomAvatarLink} />
+      )}
     </CardContainer>
   );
 }
